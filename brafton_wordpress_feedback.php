@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name:  Brafton Wordpress Feedback
-Plugin URI:   https://github.com/BraftonSupport/braftonium-plugin/
+Plugin URI:   https://github.com/BraftonSupport/brafton-wordpress-feedback/
 Description:  Provide feedback for Brafton developed Wordpress Sites
 Version:	  0.1.0
 Author: Brafton
