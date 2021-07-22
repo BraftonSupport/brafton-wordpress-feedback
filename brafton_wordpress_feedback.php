@@ -183,12 +183,12 @@ if( is_admin() )
 add_action( 'wp_enqueue_scripts', 'feedback_enqueue_styles', 1000);
 function feedback_enqueue_styles() {
     $options = get_option( 'brafton_feedback' );
-    if($options['admin_only']){
+    if(isset($options['admin_only']) && $options['admin_only']){
         if(!is_user_logged_in()){
             return;
         }
     }
-    if($options['project_id']){
+    if(isset($options['project_id']) && $options['project_id']){
         $env = $options['env'] ? 'dev' : 'live';
         $base_url = "https://resources.${env}.tech.brafton.com/feedback/0.x/";
         wp_enqueue_style( 'feedback-style', $base_url.'styles.css',99999);
