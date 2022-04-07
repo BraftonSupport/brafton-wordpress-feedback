@@ -3,7 +3,7 @@
 Plugin Name:  Brafton Wordpress Feedback
 Plugin URI:   https://github.com/BraftonSupport/brafton-wordpress-feedback/
 Description:  Provide feedback for Brafton developed Wordpress Sites
-Version:	  0.1.0
+Version:	  1.0.0
 Author: Brafton
 Author URI: http://www.brafton.com
 License:	  GPL2
