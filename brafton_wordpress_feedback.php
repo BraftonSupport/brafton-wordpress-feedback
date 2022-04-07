@@ -116,6 +116,13 @@ class MySettingsPage
             'brafton-feedback-admin', 
             'setting_section_id'
         );  
+        add_settings_field(
+            'version', 
+            'Manually change the desired version of the feedback tool', 
+            array( $this, 'version_callback' ), 
+            'brafton-feedback-admin', 
+            'setting_section_id'
+        );  
     }
 
     /**
@@ -137,6 +144,9 @@ class MySettingsPage
             $new_input['admin_only'] = absint( $input['admin_only'] );
         if( isset( $input['anonymous_user'] ) )
             $new_input['anonymous_user'] = absint( $input['anonymous_user'] );
+        return $new_input;
+        if( isset( $input['version'] ) )
+            $new_input['version'] = absint( $input['version'] );
         return $new_input;
     }
 
@@ -173,6 +183,19 @@ class MySettingsPage
             isset( $this->options['env'] ) && $this->options['env'] === 1 ? 'checked' : ''
         );
     }
+    public function version_callback()
+    {
+        printf(
+            '<select  name="brafton_feedback[version]"/>
+            <option value="0" %s>0.x</option>
+            <option value="1" %s>1.x</option>
+            <option value="2" %s>2.x</option>
+            </select>',
+            isset( $this->options['version'] ) && $this->options['version'] === 0 ? 'checked' : '',
+            isset( $this->options['version'] ) && $this->options['version'] === 1 ? 'checked' : '',
+            isset( $this->options['version'] ) && $this->options['version'] === 2 ? 'checked' : ''
+        );
+    }
     /** 
      * Get the settings option array and print one of its values
      */
@@ -204,7 +227,8 @@ function feedback_enqueue_styles() {
     if(is_user_logged_in() || (isset($options['anonymous_user']) && $options['anonymous_user']) ){
         if($options['project_id']){
             $env = $options['env'] ? 'dev' : 'live';
-            $base_url = "https://resources.${env}.tech.brafton.com/feedback/0.x/";
+            $version = isset($options['version'])? $options['version'] : 0;
+            $base_url = "https://resources.${env}.tech.brafton.com/feedback/${version}.x/";
             wp_enqueue_style( 'feedback-style', $base_url.'styles.css',99999);
             
 
