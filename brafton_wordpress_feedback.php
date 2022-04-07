@@ -144,7 +144,6 @@ class MySettingsPage
             $new_input['admin_only'] = absint( $input['admin_only'] );
         if( isset( $input['anonymous_user'] ) )
             $new_input['anonymous_user'] = absint( $input['anonymous_user'] );
-        return $new_input;
         if( isset( $input['version'] ) )
             $new_input['version'] = absint( $input['version'] );
         return $new_input;
@@ -186,14 +185,15 @@ class MySettingsPage
     public function version_callback()
     {
         printf(
-            '<select  name="brafton_feedback[version]"/>
+            '<select  name="brafton_feedback[version]" value="%d"/>
             <option value="0" %s>0.x</option>
             <option value="1" %s>1.x</option>
             <option value="2" %s>2.x</option>
             </select>',
-            isset( $this->options['version'] ) && $this->options['version'] === 0 ? 'checked' : '',
-            isset( $this->options['version'] ) && $this->options['version'] === 1 ? 'checked' : '',
-            isset( $this->options['version'] ) && $this->options['version'] === 2 ? 'checked' : ''
+            $this->options['version'],
+            isset( $this->options['version'] ) && $this->options['version'] === 0 ? 'selected' : '',
+            isset( $this->options['version'] ) && $this->options['version'] === 1 ? 'selected' : '',
+            isset( $this->options['version'] ) && $this->options['version'] === 2 ? 'selected' : ''
         );
     }
     /** 
