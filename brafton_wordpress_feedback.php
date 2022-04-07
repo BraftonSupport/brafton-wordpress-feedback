@@ -95,13 +95,20 @@ class MySettingsPage
             'brafton-feedback-admin', // Page
             'setting_section_id' // Section           
         );  
+        // add_settings_field(
+        //     'admin_only', 
+        //     'Enable For Logged-In Users Only', 
+        //     array( $this, 'admin_only_callback' ), 
+        //     'brafton-feedback-admin', 
+        //     'setting_section_id'
+        // );    
         add_settings_field(
-            'admin_only', 
-            'Enable For Logged-In Users Only', 
-            array( $this, 'admin_only_callback' ), 
+            'anonymous_user', 
+            'Enable For all users', 
+            array( $this, 'anonymous_user_callback' ), 
             'brafton-feedback-admin', 
             'setting_section_id'
-        );    
+        ); 
         add_settings_field(
             'env', 
             'Put in Dev Mode. Use this for testing new feedback features', 
@@ -128,7 +135,8 @@ class MySettingsPage
             $new_input['env'] = absint( $input['env'] );
         if( isset( $input['admin_only'] ) )
             $new_input['admin_only'] = absint( $input['admin_only'] );
-
+        if( isset( $input['anonymous_user'] ) )
+            $new_input['anonymous_user'] = absint( $input['anonymous_user'] );
         return $new_input;
     }
 
@@ -168,11 +176,18 @@ class MySettingsPage
     /** 
      * Get the settings option array and print one of its values
      */
-    public function admin_only_callback()
+    // public function admin_only_callback()
+    // {
+    //     printf(
+    //         '<input type="checkbox" name="brafton_feedback[admin_only]" value="1" %s/>',
+    //         isset( $this->options['admin_only'] ) && $this->options['admin_only'] === 1 ? 'checked' : ''
+    //     );
+    // }
+    public function anonymous_user_callback()
     {
         printf(
-            '<input type="checkbox" name="brafton_feedback[admin_only]" value="1" %s/>',
-            isset( $this->options['admin_only'] ) && $this->options['admin_only'] === 1 ? 'checked' : ''
+            '<input type="checkbox" name="brafton_feedback[anonymous_user]" value="1" %s/>',
+            isset( $this->options['anonymous_user'] ) && $this->options['anonymous_user'] === 1 ? 'checked' : ''
         );
     }
 }
@@ -183,34 +198,34 @@ if( is_admin() )
 add_action( 'wp_enqueue_scripts', 'feedback_enqueue_styles', 1000);
 function feedback_enqueue_styles() {
     $options = get_option( 'brafton_feedback' );
-    if($options['admin_only']){
-        if(!is_user_logged_in()){
-            return;
-        }
+    if(!isset($options['project_id'])){
+        return;
     }
-    if($options['project_id']){
-        $env = $options['env'] ? 'dev' : 'live';
-        $base_url = "https://resources.${env}.tech.brafton.com/feedback/0.x/";
-        wp_enqueue_style( 'feedback-style', $base_url.'styles.css',99999);
-        
+    if(is_user_logged_in() || (isset($options['anonymous_user']) && $options['anonymous_user']) ){
+        if($options['project_id']){
+            $env = $options['env'] ? 'dev' : 'live';
+            $base_url = "https://resources.${env}.tech.brafton.com/feedback/0.x/";
+            wp_enqueue_style( 'feedback-style', $base_url.'styles.css',99999);
+            
 
 
-        wp_enqueue_script( 'poly-main', $base_url.'polyfills.js',array(), false, true);
-        wp_enqueue_script( 'poly-main-ie', $base_url.'polyfills-es5.js',array(), false, true);
-        wp_enqueue_script( 'feedback-main', $base_url.'main.js',array(), false, true);
+            wp_enqueue_script( 'poly-main', $base_url.'polyfills.js',array(), false, true);
+            wp_enqueue_script( 'poly-main-ie', $base_url.'polyfills-es5.js',array(), false, true);
+            wp_enqueue_script( 'feedback-main', $base_url.'main.js',array(), false, true);
+        }
     }
     
 }
 add_action('wp_footer', 'add_project');
 function add_project(){
     $options = get_option( 'brafton_feedback' );
-    if($options['admin_only']){
-        if(!is_user_logged_in()){
-            return;
-        }
+    if(!isset($options['project_id'])){
+        return;
     }
-    if($options['project_id']){
-        printf('<brafton-feedback project="%s" editRound="%s"></brafton-feedback>', $options['project_id'], $options['editround_id']);
+    if(is_user_logged_in() || (isset($options['anonymous_user']) && $options['anonymous_user']) ){
+        if($options['project_id']){
+            printf('<brafton-feedback project="%s" editRound="%s"></brafton-feedback>', $options['project_id'], $options['editround_id']);
+        }
     }
 
 }
