@@ -186,9 +186,9 @@ class MySettingsPage
     {
         printf(
             '<select  name="brafton_feedback[version]" value="%d"/>
-            <option value="0" %s>0.x</option>
             <option value="1" %s>1.x</option>
             <option value="2" %s>2.x</option>
+            <option value="3" %s>3.x</option>
             </select>',
             $this->options['version'],
             isset( $this->options['version'] ) && $this->options['version'] === 0 ? 'selected' : '',
