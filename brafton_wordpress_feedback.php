@@ -191,9 +191,9 @@ class MySettingsPage
             <option value="3" %s>3.x</option>
             </select>',
             $this->options['version'],
-            isset( $this->options['version'] ) && $this->options['version'] === 0 ? 'selected' : '',
             isset( $this->options['version'] ) && $this->options['version'] === 1 ? 'selected' : '',
-            isset( $this->options['version'] ) && $this->options['version'] === 2 ? 'selected' : ''
+            isset( $this->options['version'] ) && $this->options['version'] === 2 ? 'selected' : '',
+            isset( $this->options['version'] ) && $this->options['version'] === 3 ? 'selected' : ''
         );
     }
     /** 
